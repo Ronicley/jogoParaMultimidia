@@ -30,9 +30,127 @@
         var game = new Phaser.Game(config);
 
         function preload() {
+            this.load.image('cascaDeBanana', 'assets/casca-de-banana.png')
+            this.load.image('bolaDePapel', 'assets/bola-de-papel-png-clipart.png')
+            this.load.image('copoVidro', 'assets/copoVidro.png')
+            this.load.image('garrafaAmassada', 'assets/garrafaAmassada.png')
+            this.load.image('lataRefrigerante', 'assets/lataRefrigerante.png')
+            this.load.image('sacola', 'assets/sacola.png')
+            this.load.image('maçaMordida', 'assets/maçaMordida.png')
+            this.load.image('lixeiras', 'assets/lixeiras.png')
+
+            this.load.image('sky', 'assets/praia1.jpg');
+
+
         }
 
         function create() {
+            this.add.image(400, 300, 'sky');
+            this.add.image(400, 100, 'lixeiras').setScale(0.7)
+            bolaDePapel = this.add.image(
+                Phaser.Math.Between(
+                    config.width / 3,
+                    config.width / 1.2
+                ),
+                Phaser.Math.Between(
+                    config.height / 3,
+                    config.height / 1.2
+                ), 'bolaDePapel')
+                .setScale(0.1)
+                .setInteractive()
+
+            copoVidro = this.add.image(
+                Phaser.Math.Between(
+                    config.width / 3,
+                    config.width / 1.2
+                ),
+                Phaser.Math.Between(
+                    config.height / 3,
+                    config.height / 1.2
+                ), 'copoVidro')
+                .setScale(0.2)
+                .setInteractive()
+                
+            garrafaAmassada = this.add.image(
+                Phaser.Math.Between(
+                    config.width / 3,
+                    config.width / 1.2
+                ),
+                Phaser.Math.Between(
+                    config.height / 3,
+                    config.height / 1.2
+                ), 'garrafaAmassada')
+                .setScale(0.1)
+                .setInteractive()
+
+            lataRefrigerante = this.add.image(
+                Phaser.Math.Between(
+                    config.width / 3,
+                    config.width / 1.2
+                ),
+                Phaser.Math.Between(
+                    config.height / 3,
+                    config.height / 1.2
+                ), 'lataRefrigerante')
+                .setScale(0.1)
+                .setInteractive()
+
+            sacola = this.add.image(
+                Phaser.Math.Between(
+                    config.width / 3,
+                    config.width / 1.2
+                ),
+                Phaser.Math.Between(
+                    config.height / 3,
+                    config.height / 1.2
+                ), 'sacola')
+                .setScale(0.2)
+                .setInteractive()
+                
+            maçaMordida = this.add.image(
+                Phaser.Math.Between(
+                    config.width / 3,
+                    config.width / 1.2
+                ),
+                Phaser.Math.Between(
+                    config.height / 3,
+                    config.height / 1.2
+                ), 'maçaMordida')
+                .setScale(0.2)
+                .setInteractive()
+
+            banana = this.add.image(
+                Phaser.Math.Between(
+                    config.width / 3,
+                    config.width / 1.2
+                ),
+                Phaser.Math.Between(
+                    config.height / 3,
+                    config.height / 1.2
+                ), 'cascaDeBanana')
+                .setScale(0.2)
+                .setInteractive()
+
+            this.input.setDraggable(banana)
+            this.input.setDraggable(bolaDePapel)
+            this.input.setDraggable(garrafaAmassada)
+            this.input.setDraggable(maçaMordida)
+            this.input.setDraggable(sacola)
+            this.input.setDraggable(copoVidro)
+            this.input.setDraggable(lataRefrigerante)
+
+            this.input.dragTimeThreshold = 500
+            this.input.on('dragstart', function (pointer, gameObject) {
+                gameObject.setTint(0xff0000)
+            })
+            this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+                gameObject.x = dragX
+                gameObject.y = dragY
+            })
+            this.input.on('dragend', function (pointer, gameObject) {
+                gameObject.clearTint()
+            })
+
         }
 
         function update() {
