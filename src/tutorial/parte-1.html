@@ -20,6 +20,14 @@
             type: Phaser.AUTO,
             width: 800,
             height: 600,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 },
+                    debug: false
+                }
+            },
+
             scene: {
                 preload: preload,
                 create: create,
@@ -28,7 +36,20 @@
         };
 
         var game = new Phaser.Game(config);
-
+        var banana
+        var copoVidro
+        var garrafaAmassada
+        var lataRefrigerante
+        var sacola
+        var maçaMordida
+        var banana
+        var score = 0;
+        var time = -100;
+        var nick = prompt("Insira seu nickname");
+        var endGame = false;
+        var qtdLixo = 7
+        var scoreText;
+        var gameOverText;
         function preload() {
             this.load.image('cascaDeBanana', 'assets/casca-de-banana.png')
             this.load.image('bolaDePapel', 'assets/bola-de-papel-png-clipart.png')
@@ -36,18 +57,36 @@
             this.load.image('garrafaAmassada', 'assets/garrafaAmassada.png')
             this.load.image('lataRefrigerante', 'assets/lataRefrigerante.png')
             this.load.image('sacola', 'assets/sacola.png')
-            this.load.image('maçaMordida', 'assets/maçaMordida.png')
-            this.load.image('lixeiras', 'assets/lixeiras.png')
-
-            this.load.image('sky', 'assets/praia1.jpg');
-
-
+            this.load.image('macaMordida', 'assets/maçaMordida.png')
+            this.load.image('lixeiraPapel', 'assets/lixeiraDePapel.png')
+            this.load.image('lixeiraVidro', 'assets/lexeiraDeVidro.png')
+            this.load.image('lixeiraMetal', 'assets/lixeiraDeMetal.png')
+            this.load.image('lixeiraOrganico', 'assets/lixeiraDeOrganico.png')
+            this.load.image('lixeirasPlastico', 'assets/lixeiraDePlastico.png')
+            this.load.image('sky', 'assets/fundo.jpg');
         }
 
         function create() {
+            //adciona o fundo do jogo
             this.add.image(400, 300, 'sky');
-            this.add.image(400, 100, 'lixeiras').setScale(0.7)
-            bolaDePapel = this.add.image(
+
+            // adicona as lixeira com fisíca estatica
+            lixeiraPapel = this.physics.add.staticGroup()
+            lixeiraVidro = this.physics.add.staticGroup()
+            lixeiraMetal = this.physics.add.staticGroup()
+            lixeiraPlastico = this.physics.add.staticGroup()
+            lixeiraOrganico = this.physics.add.staticGroup()
+
+            //associa a imagem do objeto
+            lixeiraPapel.create(200, 110, 'lixeiraPapel').setScale(0.5).refreshBody();
+            lixeiraVidro.create(300, 110, 'lixeiraVidro').setScale(0.5).refreshBody();
+            lixeiraMetal.create(400, 110, 'lixeiraMetal').setScale(0.5).refreshBody();
+            lixeiraOrganico.create(500, 110, 'lixeiraOrganico').setScale(0.5).refreshBody();
+            lixeiraPlastico.create(620, 110, 'lixeirasPlastico').setScale(0.5).refreshBody();
+
+            //adciona o sprite na tela, em uma posição aleatoria delimitada, para que os sprits não se choquem com as lixeira
+            //fazendo com que os mesmos desapareçam
+            bolaDePapel = this.physics.add.sprite(
                 Phaser.Math.Between(
                     config.width / 3,
                     config.width / 1.2
@@ -59,7 +98,7 @@
                 .setScale(0.1)
                 .setInteractive()
 
-            copoVidro = this.add.image(
+            copoVidro = this.physics.add.sprite(
                 Phaser.Math.Between(
                     config.width / 3,
                     config.width / 1.2
@@ -70,8 +109,8 @@
                 ), 'copoVidro')
                 .setScale(0.2)
                 .setInteractive()
-                
-            garrafaAmassada = this.add.image(
+
+            garrafaAmassada = this.physics.add.sprite(
                 Phaser.Math.Between(
                     config.width / 3,
                     config.width / 1.2
@@ -83,7 +122,7 @@
                 .setScale(0.1)
                 .setInteractive()
 
-            lataRefrigerante = this.add.image(
+            lataRefrigerante = this.physics.add.sprite(
                 Phaser.Math.Between(
                     config.width / 3,
                     config.width / 1.2
@@ -95,7 +134,7 @@
                 .setScale(0.1)
                 .setInteractive()
 
-            sacola = this.add.image(
+            sacola = this.physics.add.sprite(
                 Phaser.Math.Between(
                     config.width / 3,
                     config.width / 1.2
@@ -106,8 +145,8 @@
                 ), 'sacola')
                 .setScale(0.2)
                 .setInteractive()
-                
-            maçaMordida = this.add.image(
+
+            macaMordida = this.physics.add.sprite(
                 Phaser.Math.Between(
                     config.width / 3,
                     config.width / 1.2
@@ -115,11 +154,10 @@
                 Phaser.Math.Between(
                     config.height / 3,
                     config.height / 1.2
-                ), 'maçaMordida')
+                ), 'macaMordida')
                 .setScale(0.2)
                 .setInteractive()
-
-            banana = this.add.image(
+            banana = this.physics.add.sprite(
                 Phaser.Math.Between(
                     config.width / 3,
                     config.width / 1.2
@@ -131,14 +169,16 @@
                 .setScale(0.2)
                 .setInteractive()
 
+            // permite com que o objeto seja arrastado na tela 
             this.input.setDraggable(banana)
             this.input.setDraggable(bolaDePapel)
             this.input.setDraggable(garrafaAmassada)
-            this.input.setDraggable(maçaMordida)
+            this.input.setDraggable(macaMordida)
             this.input.setDraggable(sacola)
             this.input.setDraggable(copoVidro)
             this.input.setDraggable(lataRefrigerante)
 
+            //permite ativar a função de arrasto ao clique e movimento do mouse
             this.input.dragTimeThreshold = 500
             this.input.on('dragstart', function (pointer, gameObject) {
                 gameObject.setTint(0xff0000)
@@ -151,11 +191,93 @@
                 gameObject.clearTint()
             })
 
-        }
+            //adciona colição entre os objetos e suas respectivas lixeiras
+            this.physics.add.collider(banana, lixeiraOrganico);
+            this.physics.add.collider(bolaDePapel, lixeiraPapel);
+            this.physics.add.collider(garrafaAmassada, lixeiraPlastico);
+            this.physics.add.collider(macaMordida, lixeiraOrganico);
+            this.physics.add.collider(sacola, lixeiraPlastico);
+            this.physics.add.collider(copoVidro, lixeiraVidro);
+            this.physics.add.collider(lataRefrigerante, lixeiraMetal);
 
+            //passa as informações de qual objeto está conlidindo com qual 
+            this.physics.add.overlap(banana, lixeiraOrganico, collectLixo, null, this);
+            this.physics.add.overlap(bolaDePapel, lixeiraPapel, collectLixo, null, this);
+            this.physics.add.overlap(garrafaAmassada, lixeiraPlastico, collectLixo, null, this);
+            this.physics.add.overlap(macaMordida, lixeiraOrganico, collectLixo, null, this);
+            this.physics.add.overlap(sacola, lixeiraPlastico, collectLixo, null, this);
+            this.physics.add.overlap(copoVidro, lixeiraVidro, collectLixo, null, this);
+            this.physics.add.overlap(lataRefrigerante, lixeiraMetal, collectLixo, null, this);
+            //adciona o score na tela para ve a pontação 
+            scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '24px', fill: '#000' });
+
+        }
         function update() {
+            if (endGame) {
+                return;
+            }
+            time++
         }
+        function caculaPontoPorMenorTempo(time) {
+            if (time > 0 && time < 100) {
+                return 100
+            }
+            if (time > 100 && time < 200) {
+                return 50
+            }
+            if (time > 200 && time < 300) {
+                return 25
+            }
+            if (time > 300 && time < 400) {
+                return 10;
+            }
+            if (time > 400 && time < 500) {
+                return 5;
+            }
+            if (time > 500) {
+                return 1
+            }
+        }
+        function collectLixo(lixo, lixeira) {
+            lixo.disableBody(true, true);
+            score += 10;
+            scoreText.setText('Score: ' + score);
+            qtdLixo--
 
+            localStorage.setItem(nick, score);
+
+            if (qtdLixo == 0) {
+                localStorage.setItem(nick, score + caculaPontoPorMenorTempo(time));
+                gameOver = true;
+                console.log(this)
+                gameOverText = this.add.text(90, 170, 'Fim de jogo!', { fontSize: '80px', fill: '#000' });
+                if (localStorage.length > 0) {
+                    var localStorageArray = new Array();
+                    for (i = 0; i < localStorage.length; i++) {
+                        localStorageArray[i] = { key: localStorage.key(i), value: localStorage.getItem(localStorage.key(i)) }
+                    }
+                }
+
+                var sortedArray = localStorageArray.sort(function (a, b) {
+                    return b.value - a.value
+                })
+                gameOverText = this.add.text(90, 300, Object.keys(sortedArray).map(function (key, value) {
+                    return sortedArray[key].key + "--------------" + sortedArray[key].value
+                }), { fontSize: '40px', fill: '#001' });
+                gameOverText = this.add.text(createButton());
+            }
+
+
+        }
+        function createButton() {
+            var btn = document.createElement('BUTTON');
+            var lbl = document.createTextNode("Reinciar");
+            btn.appendChild(lbl);
+            btn.onclick = function () {
+                location.reload();
+            }
+            document.body.appendChild(btn);
+        }
     </script>
 
 </body>
