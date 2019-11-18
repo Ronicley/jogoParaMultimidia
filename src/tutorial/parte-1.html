@@ -250,7 +250,7 @@
                 localStorage.setItem(nick, score + caculaPontoPorMenorTempo(time));
                 gameOver = true;
                 console.log(this)
-                gameOverText = this.add.text(90, 170, 'Fim de jogo!', { fontSize: '80px', fill: '#000' });
+                gameOverText = this.add.text(90, 170, 'Fim de jogo!', { fontSize: '80px', fill: '#8B0000', fontFamily: 'Avantgarde' });
                 if (localStorage.length > 0) {
                     var localStorageArray = new Array();
                     for (i = 0; i < localStorage.length; i++) {
@@ -263,7 +263,7 @@
                 })
                 gameOverText = this.add.text(90, 300, Object.keys(sortedArray).map(function (key, value) {
                     return sortedArray[key].key + "--------------" + sortedArray[key].value
-                }), { fontSize: '40px', fill: '#001' });
+                }), { fontSize: '40px', fill: '#008000', fontFamily: 'Avantgarde' });
                 gameOverText = this.add.text(createButton());
             }
 
