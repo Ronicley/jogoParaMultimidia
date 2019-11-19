@@ -8,6 +8,64 @@
     <style type="text/css">
         body {
             margin: 0;
+            background-color: black;
+            background-size: cover;
+        }
+
+        .container {
+            margin-left: 40%;
+            margin-top: 20em;
+            z-index: 9999;
+            position: absolute;
+        }
+
+        canvas {
+            position: absolute;
+            z-index: -9999;
+        }
+
+        button {
+            border-radius: 3px;
+            width: 7em;
+            height: 2.8em;
+            border: solid 4px rgb(16, 52, 255);
+            -webkit-box-shadow: 0px 0px 70px 12px rgba(15, 217, 39, 1);
+            -moz-box-shadow: 0px 0px 70px 12px rgba(15, 217, 39, 1);
+            box-shadow: 0px 0px 70px 12px rgb(16, 52, 255);
+            background-color: rgb(16, 52, 255);
+            color: white;
+        }
+
+        button:hover {
+            border-radius: 3px;
+            width: 7.4em;
+            height: 3.2em;
+            border: solid 4px rgb(16, 52, 255);
+            box-shadow: 0px 0px 70px 12px rgb(16, 52, 255);
+            background-color: rgb(16, 52, 255);
+            color: white;
+        }
+
+        input {
+            border-radius: 3px;
+            height: 2em;
+            border: solid 4px rgb(255, 15, 15);
+            box-shadow: 0px 0px 70px 12px rgb(255, 15, 15);
+        }
+
+        input:hover {
+            border-radius: 3px;
+            height: 2.4em;
+            width: 13em;
+            border: solid 4px rgb(255, 15, 15);
+            -webkit-box-shadow: 0px 0px 70px 12px rgba(15, 217, 39, 1);
+            -moz-box-shadow: 0px 0px 70px 12px rgba(15, 217, 39, 1);
+            box-shadow: 0px 0px 70px 12px rgb(255, 15, 15);
+        }
+
+        #reiniciar {
+            margin-left: 75%;
+            margin-top: 25em;
         }
     </style>
 </head>
@@ -34,8 +92,8 @@
                 update: update
             }
         };
-
-        var game = new Phaser.Game(config);
+        var game
+        var nick = ""
         var banana
         var copoVidro
         var garrafaAmassada
@@ -45,11 +103,25 @@
         var banana
         var score = 0;
         var time = -100;
-        var nick = prompt("Insira seu nickname");
         var endGame = false;
         var qtdLixo = 7
         var scoreText;
         var gameOverText;
+
+        var handleName = function () {
+            var nome = document.getElementById("nome")
+            nick = nome.value
+            nick == "" ? alert("Por favor digite um nick") : (null)
+            localStorage.setItem(nick, null)
+            nome.style.display = "none";
+            document.getElementById("botao").style.display = "none"
+            initGame()
+        }
+
+        function initGame() {
+            game = new Phaser.Game(config)
+        }
+
         function preload() {
             this.load.image('cascaDeBanana', 'assets/casca-de-banana.png')
             this.load.image('bolaDePapel', 'assets/bola-de-papel-png-clipart.png')
@@ -219,22 +291,22 @@
             time++
         }
         function caculaPontoPorMenorTempo(time) {
-            if (time > 0 && time < 100) {
+            if (time > 0 && time < 200) {
                 return 100
             }
-            if (time > 100 && time < 200) {
+            if (time > 200 && time < 300) {
                 return 50
             }
-            if (time > 200 && time < 300) {
+            if (time > 300 && time < 400) {
                 return 25
             }
-            if (time > 300 && time < 400) {
+            if (time > 400 && time < 500) {
                 return 10;
             }
-            if (time > 400 && time < 500) {
+            if (time > 500 && time < 600) {
                 return 5;
             }
-            if (time > 500) {
+            if (time > 600) {
                 return 1
             }
         }
@@ -249,7 +321,6 @@
             if (qtdLixo == 0) {
                 localStorage.setItem(nick, score + caculaPontoPorMenorTempo(time));
                 gameOver = true;
-                console.log(this)
                 gameOverText = this.add.text(90, 170, 'Fim de jogo!', { fontSize: '80px', fill: '#8B0000', fontFamily: 'Avantgarde' });
                 if (localStorage.length > 0) {
                     var localStorageArray = new Array();
@@ -257,7 +328,6 @@
                         localStorageArray[i] = { key: localStorage.key(i), value: localStorage.getItem(localStorage.key(i)) }
                     }
                 }
-
                 var sortedArray = localStorageArray.sort(function (a, b) {
                     return b.value - a.value
                 })
@@ -273,12 +343,17 @@
             var btn = document.createElement('BUTTON');
             var lbl = document.createTextNode("Reinciar");
             btn.appendChild(lbl);
+            btn.setAttribute("id", "reiniciar")
             btn.onclick = function () {
                 location.reload();
             }
             document.body.appendChild(btn);
         }
     </script>
+    <div class="container">
+        <input type="text" maxlength="4" id="nome" placeholder="Digite seu nome" />
+        <button type="button" id="botao" onclick="handleName()">Jogar</button>
+    </div>
 
 </body>
 
