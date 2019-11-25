@@ -3,69 +3,69 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Making your first Phaser 3 Game - Part 1</title>
-    <script src="//cdn.jsdelivr.net/npm/phaser@3/dist/phaser.min.js"></script>
+    <title>Recicle</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
     <style type="text/css">
         body {
             margin: 0;
-            background-color: black;
+            background-color:rgb(223, 222, 161);
             background-size: cover;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-family: Comic Sans MS !important;
         }
-
+        h1{
+            color: white;
+            font-size: 50px;
+            text-align: center
+        }
         .container {
-            margin-left: 40%;
-            margin-top: 20em;
+            margin-top: 30em;
             z-index: 9999;
-            position: absolute;
+            position: absolute;           
+            padding-top: 7em;
+            padding-bottom: 7em;
+            padding-right: 2em;
+            padding-left: 2em;
+            background-color: rgb(255, 74, 42);  
+            border-radius: 20px;  
         }
 
         canvas {
+            margin-top:30em;
+            vertical-align: middle;
             position: absolute;
             z-index: -9999;
+            border: solid 20px tomato;
+            border-radius: 20px;  
         }
 
         button {
-            border-radius: 3px;
-            width: 7em;
-            height: 2.8em;
-            border: solid 4px rgb(16, 52, 255);
-            -webkit-box-shadow: 0px 0px 70px 12px rgba(15, 217, 39, 1);
-            -moz-box-shadow: 0px 0px 70px 12px rgba(15, 217, 39, 1);
-            box-shadow: 0px 0px 70px 12px rgb(16, 52, 255);
-            background-color: rgb(16, 52, 255);
-            color: white;
+            border-radius: 10px;
+            border: solid 7px rgb(118, 79, 182);
+            font-size: 30px;                       
+            color: rgb(118, 79, 182);
+            background-color: white;
         }
-
         button:hover {
-            border-radius: 3px;
-            width: 7.4em;
-            height: 3.2em;
-            border: solid 4px rgb(16, 52, 255);
-            box-shadow: 0px 0px 70px 12px rgb(16, 52, 255);
-            background-color: rgb(16, 52, 255);
+            border-radius: 10px;
+            border: solid 7px rgb(118, 79, 182);
+            font-size: 30px;                       
             color: white;
+            background-color: rgb(118, 79, 182);
         }
 
         input {
-            border-radius: 3px;
-            height: 2em;
-            border: solid 4px rgb(255, 15, 15);
-            box-shadow: 0px 0px 70px 12px rgb(255, 15, 15);
-        }
-
-        input:hover {
-            border-radius: 3px;
-            height: 2.4em;
-            width: 13em;
-            border: solid 4px rgb(255, 15, 15);
-            -webkit-box-shadow: 0px 0px 70px 12px rgba(15, 217, 39, 1);
-            -moz-box-shadow: 0px 0px 70px 12px rgba(15, 217, 39, 1);
-            box-shadow: 0px 0px 70px 12px rgb(255, 15, 15);
+            border-radius: 10px;            
+            font-size: 30px;
+            border: solid 7px rgb(118, 79, 182);
         }
 
         #reiniciar {
-            margin-left: 75%;
-            margin-top: 25em;
+            z-index: 9999999;
+            margin-top: 50%;
+            position: absolute;           
         }
     </style>
 </head>
@@ -114,7 +114,7 @@
             nick == "" ? alert("Por favor digite um nick") : (null)
             localStorage.setItem(nick, null)
             nome.style.display = "none";
-            document.getElementById("botao").style.display = "none"
+            document.getElementById("container").style.display = "none"
             initGame()
         }
 
@@ -251,7 +251,7 @@
             this.input.setDraggable(lataRefrigerante)
 
             //permite ativar a função de arrasto ao clique e movimento do mouse
-            this.input.dragTimeThreshold = 500
+            this.input.dragTimeThreshold = 1
             this.input.on('dragstart', function (pointer, gameObject) {
                 gameObject.setTint(0xff0000)
             })
@@ -281,7 +281,7 @@
             this.physics.add.overlap(copoVidro, lixeiraVidro, collectLixo, null, this);
             this.physics.add.overlap(lataRefrigerante, lixeiraMetal, collectLixo, null, this);
             //adciona o score na tela para ve a pontação 
-            scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '24px', fill: '#000' });
+            scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '35px', fill: '#FE0105', fontFamily:'Comic Sans MS' });
 
         }
         function update() {
@@ -321,7 +321,7 @@
             if (qtdLixo == 0) {
                 localStorage.setItem(nick, score + caculaPontoPorMenorTempo(time));
                 gameOver = true;
-                gameOverText = this.add.text(90, 170, 'Fim de jogo!', { fontSize: '80px', fill: '#8B0000', fontFamily: 'Avantgarde' });
+                gameOverText = this.add.text(90, 170, 'Fim de jogo!', { fontSize: '80px', fill: '#FE0105', fontFamily:'Comic Sans MS' });
                 if (localStorage.length > 0) {
                     var localStorageArray = new Array();
                     for (i = 0; i < localStorage.length; i++) {
@@ -333,7 +333,7 @@
                 })
                 gameOverText = this.add.text(90, 300, Object.keys(sortedArray).map(function (key, value) {
                     return sortedArray[key].key + "--------------" + sortedArray[key].value
-                }), { fontSize: '40px', fill: '#008000', fontFamily: 'Avantgarde' });
+                }), { fontSize: '35px', fill: '#FE0105', fontFamily:'Comic Sans MS' });
                 gameOverText = this.add.text(createButton());
             }
 
@@ -350,7 +350,8 @@
             document.body.appendChild(btn);
         }
     </script>
-    <div class="container">
+    <div class="container" id="container">
+        <h1>Recicle</h1>
         <input type="text" maxlength="4" id="nome" placeholder="Digite seu nome" />
         <button type="button" id="botao" onclick="handleName()">Jogar</button>
     </div>
